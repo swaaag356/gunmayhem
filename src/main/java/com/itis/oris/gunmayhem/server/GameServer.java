@@ -64,7 +64,7 @@ public class GameServer {
                                     .velocity(new Vector2D(0, 0))
                                     .onGround(false)
                                     .state(PlayerState.IDLE)
-                                    .lives(3)
+                                    .lives(5)
                                     .build()
                     )
                     .bluePlayer(
@@ -75,7 +75,7 @@ public class GameServer {
                                     .velocity(new Vector2D(0, 0))
                                     .onGround(false)
                                     .state(PlayerState.IDLE)
-                                    .lives(3)
+                                    .lives(5)
                                     .build()
                     )
                     .gameOver(false)

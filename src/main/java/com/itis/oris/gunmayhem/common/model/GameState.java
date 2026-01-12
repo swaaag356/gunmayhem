@@ -20,7 +20,13 @@ public class GameState {
 
     @Builder.Default
     private List<Platform> platforms = List.of(
-            new Platform(0, 400, 800, 40));
+            new Platform(100, 420, 600, 30),
+            new Platform(120, 320, 160, 25),   // левая
+            new Platform(520, 320, 160, 25),
+            new Platform(360, 230, 120, 25),
+            new Platform(200, 250, 120, 20),
+            new Platform(480, 250, 120, 20)
+    );
 
     private boolean gameOver;
 }

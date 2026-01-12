@@ -129,7 +129,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        g.setColor(new Color(24, 52, 80)); // коричневый
+        g.setColor(new Color(63, 104, 139)); // коричневый
 
         for (Platform p : state.getPlatforms()) {
 

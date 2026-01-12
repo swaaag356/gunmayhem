@@ -29,7 +29,7 @@ public class ServerGameLoop implements Runnable {
     private static final double GRAVITY = 0.5;
 
     private static final double MOVE_SPEED = 3.0;
-    private static final double JUMP_SPEED = -10.0;
+    private static final double JUMP_SPEED = -11.0;
 
     private static final int VOID_Y = 550;
 
@@ -227,16 +227,60 @@ public class ServerGameLoop implements Runnable {
     // ================== МАГИЯ ==================
 
     private void updateMagic() {
+
         Iterator<MagicBall> it = gameState.getMagicBalls().iterator();
 
         while (it.hasNext()) {
+
             MagicBall ball = it.next();
+
+            // движение магии
             ball.getPosition().add(ball.getVelocity());
 
-            if (ball.getPosition().getX() < 0 || ball.getPosition().getX() > 800) {
+            // проверка попадания
+            Player target =
+                    ball.getOwnerId() == gameState.getRedPlayer().getId()
+                            ? gameState.getBluePlayer()
+                            : gameState.getRedPlayer();
+
+            if (intersects(target, ball)) {
+
+                // направление отталкивания
+                double dir = ball.getVelocity().getX() > 0 ? 1 : -1;
+
+                target.getVelocity().setX(dir * KNOCKBACK_X);
+                target.getVelocity().setY(KNOCKBACK_Y);
+                target.setOnGround(false);
+
+                System.out.println(
+                        "Player " + target.getId() + " knocked back"
+                );
+
+                it.remove();
+                continue;
+            }
+
+            // вылет за экран
+            if (ball.getPosition().getX() < -50 ||
+                    ball.getPosition().getX() > 850) {
+
                 it.remove();
             }
         }
+    }
+
+    private boolean intersects(Player p, MagicBall b) {
+
+        double px = p.getPosition().getX();
+        double py = p.getPosition().getY();
+
+        double bx = b.getPosition().getX();
+        double by = b.getPosition().getY();
+
+        return px < bx + 16 &&
+                px + PLAYER_W > bx &&
+                py < by + 16 &&
+                py + PLAYER_H > by;
     }
 
     // ================== БЕЗДНА ==================
