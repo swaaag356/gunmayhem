@@ -36,6 +36,11 @@ public class AnimatedSprite {
     public void draw(Graphics2D g, int x, int y, int width, int height) {
         g.drawImage(frames[currentFrame], x, y, width, height, null);
     }
+    
+    public void drawFlipped(Graphics2D g, int x, int y, int width, int height) {
+        g.drawImage(frames[currentFrame], x + width, y, -width, height, null);
+    }
+
 }
 
 

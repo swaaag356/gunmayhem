@@ -55,13 +55,17 @@ public class PlayerView {
         animations.get(currentState).update();
     }
 
-    public void draw(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g, int x, int y, boolean facingRight) {
         System.out.println(
                 "[PLAYER VIEW] draw frame " + currentState
         );
-
-        animations.get(currentState).draw(g, x, y, DRAW_W, DRAW_H);
+        if (facingRight) {
+            animations.get(currentState).draw(g, x, y, DRAW_W, DRAW_H);
+        } else {
+            animations.get(currentState).drawFlipped(g, x, y, DRAW_W, DRAW_H);
+        }
     }
+
 }
 
 

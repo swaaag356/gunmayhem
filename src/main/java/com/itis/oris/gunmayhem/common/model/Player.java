@@ -14,6 +14,7 @@ public class Player {
 
     public static final Vector2D BLUE_SPAWN = new Vector2D(123, 300);
 
+    private boolean facingRight = true;
 
     private int id;
 

@@ -36,8 +36,13 @@ public class MagicView {
         animation.update();
     }
 
-    public void draw(Graphics2D g, int x, int y) {
-        animation.draw(g, x, y, DRAW_SIZE, DRAW_SIZE);
+    public void draw(Graphics2D g, int x, int y, boolean facingRight) {
+        if (facingRight) {
+            animation.draw(g, x, y, DRAW_SIZE, DRAW_SIZE);
+        } else {
+            animation.drawFlipped(g, x, y, DRAW_SIZE, DRAW_SIZE);
+        }
     }
+
 }
 

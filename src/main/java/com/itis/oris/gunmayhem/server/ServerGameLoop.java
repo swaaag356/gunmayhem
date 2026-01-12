@@ -20,12 +20,20 @@ public class ServerGameLoop implements Runnable {
 
     private static final int TICK_RATE = 60;
 
+    private static final int PLAYER_W = 64;
+    private static final int PLAYER_H = 64;
+
+    private static final double KNOCKBACK_X = 6.0;
+    private static final double KNOCKBACK_Y = -6.0;
+
     private static final double GRAVITY = 0.5;
 
     private static final double MOVE_SPEED = 3.0;
     private static final double JUMP_SPEED = -10.0;
 
     private static final int VOID_Y = 550;
+
+    private final AtomicLong magicIdGenerator = new AtomicLong();
 
     private final GameState gameState;
     private final PrintWriter out1;
@@ -93,6 +101,7 @@ public class ServerGameLoop implements Runnable {
         switch (payload.getCommand()) {
 
             case LEFT -> {
+                player.setFacingRight(false);
                 if (player.getVelocity().getX() >= 0) {
                     player.setState(PlayerState.RUN);
                 }
@@ -100,6 +109,7 @@ public class ServerGameLoop implements Runnable {
             }
 
             case RIGHT -> {
+                player.setFacingRight(true);
                 if (player.getVelocity().getX() <= 0) {
                     player.setState(PlayerState.RUN);
                 }
@@ -124,15 +134,25 @@ public class ServerGameLoop implements Runnable {
     }
 
 
-    private final AtomicLong magicIdGenerator = new AtomicLong();
-
     private void handleCast(int playerId, GameMessage msg) {
 
         CastPayload payload = ProtocolUtils.fromJson(msg.getPayload(), CastPayload.class);
 
         Player player = getPlayer(playerId);
 
-        MagicBall ball = MagicBall.builder().id(magicIdGenerator.incrementAndGet()).ownerId(player.getId()).type(payload.getMagicType()).position(new Vector2D(player.getPosition().getX() + 32, player.getPosition().getY() + 16)).velocity(new Vector2D(player.getMageType() == MageType.RED ? 8 : -8, 0)).build();
+        double speed = player.isFacingRight() ? 8 : -8;
+
+        MagicBall ball = MagicBall.builder()
+                .id(magicIdGenerator.incrementAndGet())
+                .ownerId(player.getId())
+                .type(payload.getMagicType())
+                .position(
+                        new Vector2D(player.getPosition().getX() + 32,
+                                player.getPosition().getY() + 16))
+                .velocity(
+                        new Vector2D(speed,
+                                0))
+                .build();
 
         gameState.getMagicBalls().add(ball);
         player.setState(PlayerState.ATTACK);
@@ -145,9 +165,6 @@ public class ServerGameLoop implements Runnable {
         updatePlayer(gameState.getRedPlayer());
         updatePlayer(gameState.getBluePlayer());
     }
-
-    private static final int PLAYER_W = 64;
-    private static final int PLAYER_H = 64;
 
     private void updatePlayer(Player player) {
 

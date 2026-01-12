@@ -160,7 +160,7 @@ public class GamePanel extends JPanel {
         int x = (int) player.getPosition().getX();
         int y = (int) player.getPosition().getY();
 
-        view.draw(g, x, y);
+        view.draw(g, x, y, player.isFacingRight());
     }
 
     private void drawMagic(Graphics2D g, GameState state) {
@@ -180,7 +180,8 @@ public class GamePanel extends JPanel {
             int x = (int) ball.getPosition().getX();
             int y = (int) ball.getPosition().getY();
 
-            view.draw(g, x, y);
+            view.draw(g, x, y, ball.getVelocity().getX() > 0);
+
         }
 
         magicViews.keySet().removeIf(id ->
