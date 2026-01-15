@@ -1,13 +1,15 @@
 package com.itis.oris.gunmayhem.server;
 
 import com.itis.oris.gunmayhem.common.model.*;
-import com.itis.oris.gunmayhem.common.model.enums.MageType;
 import com.itis.oris.gunmayhem.common.model.enums.PlayerState;
 import com.itis.oris.gunmayhem.common.protocol.*;
 import com.itis.oris.gunmayhem.common.protocol.enums.MessageType;
 import com.itis.oris.gunmayhem.common.protocol.payloads.CastPayload;
 import com.itis.oris.gunmayhem.common.protocol.payloads.InputPayload;
 import com.itis.oris.gunmayhem.common.protocol.payloads.StatePayload;
+import com.itis.oris.gunmayhem.server.storage.PlayerStats;
+import com.itis.oris.gunmayhem.server.storage.PlayerStatsStorage;
+import com.itis.oris.gunmayhem.server.storage.StatsStorageModel;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -46,8 +48,6 @@ public class ServerGameLoop implements Runnable {
         this.out1 = out1;
         this.out2 = out2;
     }
-
-    // ================== ВНЕШНИЙ API ==================
 
     public void pushInput(int playerId, GameMessage msg) {
         inputQueue.add(Map.entry(playerId, msg));
@@ -315,11 +315,15 @@ public class ServerGameLoop implements Runnable {
             respawn(player);
 
             if (player.getLives() <= 0) {
-                System.out.println(
-                        "[VOID] Player " + player.getId() + " GAME OVER"
-                );
+                int looserId = player.getId();
+                int winnerId = looserId == 1 ? 2 : 1;
+
                 gameState.setGameOver(true);
+                gameState.setLooserId(looserId);
+
+                saveStats(looserId, winnerId);
             }
+
         }
     }
 
@@ -340,6 +344,22 @@ public class ServerGameLoop implements Runnable {
         player.setOnGround(false);
         player.setState(PlayerState.IDLE);
     }
+
+    private void saveStats(int looserId, int winnerId) {
+        StatsStorageModel model = PlayerStatsStorage.load();
+
+        model.getStats().putIfAbsent(1, new PlayerStats(0, 0));
+        model.getStats().putIfAbsent(2, new PlayerStats(0, 0));
+
+        PlayerStats looserStats = model.getStats().get(looserId);
+        PlayerStats winnerStats = model.getStats().get(winnerId);
+
+        looserStats.setLosses(looserStats.getLosses() + 1);
+        winnerStats.setWins(winnerStats.getWins() + 1);
+
+        PlayerStatsStorage.save(model);
+    }
+
 
     // ================== STATE ==================
 

@@ -29,6 +29,8 @@ public class GameState {
     );
 
     private boolean gameOver;
+
+    private Integer looserId;
 }
 
 

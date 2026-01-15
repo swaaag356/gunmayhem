@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@NoArgsConstructor
 public class StatsStorageModel {
 
     /**
      * key = playerId
      */
     private Map<Integer, PlayerStats> stats = new HashMap<>();
+
+    public StatsStorageModel() {}
 }
 

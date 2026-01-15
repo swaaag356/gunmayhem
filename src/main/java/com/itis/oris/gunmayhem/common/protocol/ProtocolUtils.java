@@ -31,10 +31,6 @@ public final class ProtocolUtils {
 
     // ================= PROTOCOL =================
 
-    /**
-     * Формат:
-     * TYPE|{json}
-     */
     public static String encode(GameMessage msg) {
         return msg.getType() + "|" + msg.getPayload();
     }

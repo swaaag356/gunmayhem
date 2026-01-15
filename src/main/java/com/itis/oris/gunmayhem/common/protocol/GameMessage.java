@@ -12,9 +12,5 @@ public class GameMessage {
 
     private MessageType type;
 
-    /**
-     * JSON payload.
-     * Содержимое зависит от MessageType
-     */
     private String payload;
 }
