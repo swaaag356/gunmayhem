@@ -33,36 +33,28 @@ public class GamePanel extends JPanel {
     private final Timer gameTimer;
 
     public GamePanel(GameClient gameClient) {
-        System.out.println("[PANEL] constructor start");
 
         this.gameClient = gameClient;
         this.clientGameState = gameClient.getGameState();
-
-        System.out.println("[PANEL] clientGameState = " + clientGameState);
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setFocusable(true);
         requestFocusInWindow();
 
         background = SpriteUtils.loadImage("/sprites/background/bg_world.png");
-        System.out.println("[PANEL] background loaded = " + (background != null));
 
         addKeyListener(new KeyHandler());
 
         gameTimer = new Timer(16, e -> {
-            System.out.println("[TIMER] tick");
             updateAnimations();
             repaint();
         });
         gameTimer.start();
-
-        System.out.println("[PANEL] constructor end");
     }
 
     // ================== UPDATE ==================
 
     private void updateAnimations() {
-        System.out.println("[UPDATE] updateAnimations");
 
         redView.update();
         blueView.update();
@@ -76,7 +68,6 @@ public class GamePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("[RENDER] paintComponent ENTER");
 
         super.paintComponent(g);
 
@@ -86,7 +77,6 @@ public class GamePanel extends JPanel {
                 RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
         );
 
-        System.out.println("[RENDER] drawBackground");
         drawBackground(g2);
 
         drawPlatforms(g2, clientGameState.get());
@@ -94,29 +84,17 @@ public class GamePanel extends JPanel {
         boolean ready = clientGameState.isReady();
         GameState state = clientGameState.get();
 
-        System.out.println(
-                "[RENDER] isReady=" + ready +
-                        " state=" + state
-        );
-
         if (!ready) {
-            System.out.println("[RENDER] EXIT: client not ready");
             return;
         }
 
-        System.out.println("[RENDER] drawVoid");
         drawVoid(g2);
 
-        System.out.println("[RENDER] draw RED player");
         drawPlayer(g2, state.getRedPlayer(), redView);
 
-        System.out.println("[RENDER] draw BLUE player");
         drawPlayer(g2, state.getBluePlayer(), blueView);
 
-        System.out.println("[RENDER] drawMagic");
         drawMagic(g2, state);
-
-        System.out.println("[RENDER] paintComponent EXIT");
     }
 
     private void drawBackground(Graphics2D g) {
@@ -149,11 +127,6 @@ public class GamePanel extends JPanel {
     }
 
     private void drawPlayer(Graphics2D g, Player player, PlayerView view) {
-        System.out.println(
-                "[DRAW PLAYER] id=" + player.getId() +
-                        " pos=(" + player.getPosition().getX() + "," + player.getPosition().getY() + ")" +
-                        " state=" + player.getState()
-        );
 
         view.setState(player.getState());
 
@@ -164,12 +137,10 @@ public class GamePanel extends JPanel {
     }
 
     private void drawMagic(Graphics2D g, GameState state) {
-        System.out.println("[DRAW MAGIC] balls=" + state.getMagicBalls().size());
 
         for (MagicBall ball : state.getMagicBalls()) {
             long id = ball.getId();
             if (!magicViews.containsKey(id)) {
-                System.out.println("[MAGIC] create view for ball " + id);
                 magicViews.put(id, new MagicView(ball.getType()));
             }
         }
@@ -195,7 +166,6 @@ public class GamePanel extends JPanel {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.println("[INPUT] keyPressed " + e.getKeyCode());
 
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A -> gameClient.sendInput(InputCommand.LEFT);
@@ -207,7 +177,6 @@ public class GamePanel extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            System.out.println("[INPUT] keyReleased " + e.getKeyCode());
 
             if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D) {
                 gameClient.sendInput(InputCommand.STOP);

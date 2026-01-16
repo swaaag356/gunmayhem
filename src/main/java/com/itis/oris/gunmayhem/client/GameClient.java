@@ -30,23 +30,18 @@ public class GameClient {
     private MagicType magicType;
 
     public void connect(String host, int port) {
-        System.out.println("CLIENT: trying to connect to " + host + ":" + port);
 
         try {
             socket = new Socket(host, port);
-            System.out.println("CLIENT: socket connected");
 
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            System.out.println("CLIENT: streams initialized");
 
             ClientNetworkListener listener =
                     new ClientNetworkListener(in, gameState, this);
 
             new Thread(listener, "client-network").start();
-
-            System.out.println("CLIENT: listener started");
 
         } catch (IOException e) {
             e.printStackTrace();

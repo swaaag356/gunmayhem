@@ -9,8 +9,6 @@ public class ClientGameState {
 
     public void update(GameState s) {
         this.state = s;
-
-        System.out.println("[CLIENT STATE] received");
     }
 
     public GameState get() {

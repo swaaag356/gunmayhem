@@ -33,10 +33,6 @@ public class PlayerView {
 
         animations.put(PlayerState.ATTACK, load(basePath + "attack.png", 3, 6));
 
-        System.out.println(
-                "[PLAYER VIEW] animations loaded: " + animations.keySet()
-        );
-
     }
 
     private AnimatedSprite load(String path, int speed, int framesCount) {
@@ -56,9 +52,7 @@ public class PlayerView {
     }
 
     public void draw(Graphics2D g, int x, int y, boolean facingRight) {
-        System.out.println(
-                "[PLAYER VIEW] draw frame " + currentState
-        );
+
         if (facingRight) {
             animations.get(currentState).draw(g, x, y, DRAW_W, DRAW_H);
         } else {

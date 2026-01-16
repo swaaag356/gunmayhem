@@ -9,9 +9,7 @@ public final class SpriteUtils {
     private SpriteUtils() {
     }
 
-    /**
-     * Режет sprite sheet на кадры по горизонтали
-     */
+
     public static BufferedImage[] cutHorizontal(String resourcePath, int frameWidth, int frameHeight, int framesCount) {
         try {
             BufferedImage sheet = ImageIO.read(SpriteUtils.class.getResource(resourcePath));
@@ -27,9 +25,6 @@ public final class SpriteUtils {
         }
     }
 
-    /**
-     * Загружает одиночный PNG (для магии и эффектов)
-     */
     public static BufferedImage loadImage(String resourcePath) {
         try {
             return ImageIO.read(SpriteUtils.class.getResource(resourcePath));

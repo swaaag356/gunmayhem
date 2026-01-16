@@ -53,11 +53,10 @@ public class ServerGameLoop implements Runnable {
         inputQueue.add(Map.entry(playerId, msg));
     }
 
-    // ================== ЦИКЛ ==================
 
     @Override
     public void run() {
-        long sleepTime = 1000 / TICK_RATE;
+        long sleepTime = 16;
 
         while (!gameState.isGameOver()) {
             processInput();
@@ -223,9 +222,6 @@ public class ServerGameLoop implements Runnable {
 
 
 
-
-    // ================== МАГИЯ ==================
-
     private void updateMagic() {
 
         Iterator<MagicBall> it = gameState.getMagicBalls().iterator();
@@ -251,10 +247,6 @@ public class ServerGameLoop implements Runnable {
                 target.getVelocity().setX(dir * KNOCKBACK_X);
                 target.getVelocity().setY(KNOCKBACK_Y);
                 target.setOnGround(false);
-
-                System.out.println(
-                        "Player " + target.getId() + " knocked back"
-                );
 
                 it.remove();
                 continue;
@@ -283,6 +275,7 @@ public class ServerGameLoop implements Runnable {
                 py + PLAYER_H > by;
     }
 
+
     // ================== БЕЗДНА ==================
 
     private void checkVoid() {
@@ -293,24 +286,10 @@ public class ServerGameLoop implements Runnable {
 
     private void checkPlayerVoid(Player player) {
 
-        System.out.println(
-                "[VOID] Player " + player.getId() +
-                        " positionY=" + player.getPosition().getY() +
-                        " VOID_Y=" + VOID_Y
-        );
-
         if (player.getPosition().getY() > VOID_Y) {
-
-            System.out.println(
-                    "[VOID] >>> Player " + player.getId() + " ENTERED VOID"
-            );
 
             player.setLives(player.getLives() - 1);
 
-            System.out.println(
-                    "[VOID] Player " + player.getId() +
-                            " lives now = " + player.getLives()
-            );
 
             respawn(player);
 
@@ -333,11 +312,6 @@ public class ServerGameLoop implements Runnable {
                 player.getId() == 1
                         ? new Vector2D(120, 300)
                         : new Vector2D(580, 300);
-
-        System.out.println(
-                "[RESPAWN] Player " + player.getId() +
-                        " -> (" + spawn.getX() + ", " + spawn.getY() + ")"
-        );
 
         player.getPosition().set(spawn.getX(), spawn.getY());
         player.getVelocity().set(0, 0);

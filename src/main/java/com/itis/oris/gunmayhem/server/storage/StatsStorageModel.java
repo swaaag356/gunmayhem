@@ -9,9 +9,6 @@ import java.util.Map;
 @Data
 public class StatsStorageModel {
 
-    /**
-     * key = playerId
-     */
     private Map<Integer, PlayerStats> stats = new HashMap<>();
 
     public StatsStorageModel() {}
